@@ -1,0 +1,1 @@
+= This template creates a new project, adds a user, add two groups from AD and sets quota 
