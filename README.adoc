@@ -1,1 +1,62 @@
 = This template creates a new project, adds a user, add two groups from AD and sets quota 
+== HowTo
+
+Source the credential for the overcloud  and then run the stack create command  to create a new stack or stack update to update the project
+
+
+=== Create a new project using the Environment file.
+
+* Create a new project create_project_env.yaml and then use the following:
+
+* The <project_name> is the name of the stack - The Environment project_name  should match the name of the stack
+
+----
+openstack stack create -t create_project.yml -e create_project_env.yaml <project_name>
+----
+
+
+* variables used are:
+----
+  # Project you want to create
+  project_name: mytest_heat
+  # project user
+  avi_user: avi
+  avi_role: admin
+  # domain
+  domain_name: avast.com
+  description_info: This project test heat  and quota
+  # vcpu listed as core
+  core_number: 10
+  # how many vms
+  instances_number: 10
+  # how many files do we allow to get injected
+  injected_number: 10
+  #gigabytes is in GB
+  gigabytes_size: 10
+  # ssh keys
+  keys: 10
+  # total memory for this project
+  memory: 10
+  # how many volumes (cinder) do we allow
+  volume_allowed: 10
+  # Floating IP address for this project
+  floating: 10
+  # How many security groups allowed for this project
+  secgroups: 10
+  # this is the ID of the AD group for Tenants (using the ID since many times the name does not work since it's in AD )
+  group_name: 3cb828da3b2a3c56ace1e43858cc735eea4f301d9f338c3741e7d4af169eb6d1
+  # this is the id of the group role _member_
+  group_role: 9fe2ff9ee4384b1894a90878d3e92bab
+  # this is the id of the role for admin
+  group_admin_role: 06043ac01f2c4fec9ba8e17d1565a354
+  # this is the ID of the AD group for OpenStack-Admins
+  group_admin_name: 96d3295c0ff35134cdfff2fb09b72722f6a1ac99a84dd6c628016ca80387a3b9
+----
+
+==== Update
+To update the project run the following:
+
+----
+openstack stack update  -t  create_project.yml -e create_project_env.yaml  <project_name>
+----
+

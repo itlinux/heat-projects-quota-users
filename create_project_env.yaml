@@ -1,0 +1,25 @@
+parameters:
+  project_name: mytest_heat
+  avi_user: avi
+  avi_role: admin
+  domain_name: avast.com
+  description_info: New project test heat, quota and adds groups Tenants and OpenStack-Admins 
+  core_number: 10
+  instances_number: 10
+  injected_number: 10
+  #gigabytes is in GB
+  gigabytes_size: 10
+  keys: 10
+  memory: 10
+  volume_allowed: 10
+  floating: 10
+  secgroups: 10
+  # this is the ID of the AD group for Tenants
+  group_name: 3cb828da3b2a3c56ace1e43858cc735eea4f301d9f338c3741e7d4af169eb6d1
+  # this is the id of the group role _member_
+  group_role: 9fe2ff9ee4384b1894a90878d3e92bab
+  # this is the id of the role for admin
+  group_admin_role: 06043ac01f2c4fec9ba8e17d1565a354
+  # this is the ID of the AD group for OpenStack-Admins
+  group_admin_name: 96d3295c0ff35134cdfff2fb09b72722f6a1ac99a84dd6c628016ca80387a3b9
+

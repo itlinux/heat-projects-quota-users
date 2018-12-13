@@ -1,0 +1,105 @@
+heat_template_version: pike
+# Created by Remo Mattei to create a project. 
+# It adds the groups Tenants and OpenStack-Admins
+# It add the user avi for the LB 
+# All vars are in the env. If you want you can use the --parameter or the -P to set the variables and not use the env file
+# README has the steps on how to use it 
+
+description: creates a new project  adds a project 
+parameters:
+        project_name:
+         type: string
+         description: project sentry
+        avi_user:
+         type: string
+         description: project user
+        avi_role:
+         type: string
+        domain_name:
+         type: string
+        description_info: 
+         type: string
+         default: Example Project
+        core_number:
+         type: string
+        instances_number:
+         type: string
+        injected_number:
+         type: string
+        keys:
+         type: string
+        memory:
+         type: string
+        volume_allowed:
+         type: string
+        gigabytes_size:
+         type: string
+        floating:
+         type: string
+        secgroups:
+         type: string
+        group_name:
+         type: string
+         default: 
+         description: Keystone group name
+        group_role:
+         type: string
+         default: 9fe2ff9ee4384b1894a90878d3e92bab
+         description: role
+        group_admin_role:
+         type: string
+         default: 06043ac01f2c4fec9ba8e17d1565a354
+         description: role
+        group_admin_name:
+         type: string
+         description: group admin role project
+         default: 96d3295c0ff35134cdfff2fb09b72722f6a1ac99a84dd6c628016ca80387a3b9
+resources:
+        project:
+          type: OS::Keystone::Project
+          properties:
+           name: { get_param: project_name }
+           domain: {get_param: domain_name }
+           description: {get_param: description_info }
+        avi-user:
+          type: OS::Keystone::UserRoleAssignment
+          properties:
+           user: {get_param: avi_user}
+           roles: [{"project": {get_resource: project }, "role": {get_param: avi_role }}]
+        groups:
+          type: OS::Keystone::GroupRoleAssignment
+          properties:
+           group: {get_param: group_name } 
+           roles: [{"project": {get_resource: project }, "role": {get_param: group_role }}]
+        os_admin_groups:
+          type: OS::Keystone::GroupRoleAssignment
+          properties:
+           group: {get_param: group_admin_name } 
+           roles: [{"project": {get_resource: project }, "role": {get_param: group_admin_role }}]
+        nova_user_quota:
+           type: OS::Nova::Quota
+           properties:
+             project: {get_resource: project }
+             cores: {get_param: core_number }
+             instances:  {get_param: instances_number }
+             injected_files: {get_param: injected_number }
+             key_pairs: {get_param: keys}
+             ram: {get_param: memory }
+        cinder_user_quota:
+           type: OS::Cinder::Quota
+           properties:
+             project: {get_resource: project }
+             volumes:  {get_param: volume_allowed }
+             gigabytes: {get_param: gigabytes_size }
+        neutron_user_quota:
+           type: OS::Neutron::Quota
+           properties:
+             project: {get_resource: project }
+             floatingip:  {get_param: floating }
+             security_group: {get_param: secgroups }
+
+outputs:
+        nova_user_quota_id:
+          value: {get_resource: nova_user_quota}
+          value: {get_resource: cinder_user_quota}
+          value: {get_resource: neutron_user_quota}
