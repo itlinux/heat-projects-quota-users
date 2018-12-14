@@ -1,0 +1,130 @@
+heat_template_version: 2016-04-08
+# Basic project all vars are in the env. If you want you can use the --parameter or the -P to set the variables. 
+
+description: |
+  Creates a project and:
+   * Manage quotas for cinder, neutron and nova
+   * Assign AD group
+   * Assign avi user as an admin
+
+parameters:
+    project_name:
+      type: string
+      description: New Project 
+
+    avi_user: 
+      type: string
+      description: AVI User for the LBaaS 
+
+    avi_role:
+      type: string
+      description: Assign the role for this project for AVI 
+
+    domain_name:
+      type: string
+      default: avast.com
+
+    description_info: 
+      type: string
+      default: Project was created 
+
+    group_role_member_id:
+      type: string
+
+    group_ad_member_id:
+      type: string
+
+    gigabytes_size:
+      type: string
+      default: 2000
+
+    floating_ip_allowed: 
+      type: string
+      description: Max Floating IPs Allowed
+      default: 10
+      label: Floating IP
+
+    cinder_volume_allowed:
+      type: string
+      default: 200
+
+    security_groups:
+      type: string
+      default: 100
+      description: Security Groups Allowed
+
+    total_memory_granted:
+      type: string
+      default: 151200
+
+    total_number_of_instances:
+      type: string
+      default: 150
+ 
+    max_key_pairs_allowed:
+      type: string
+      default: 100
+
+    injected_number_of_files:
+      type: string
+      default: "256"
+
+    vcpu_granted:
+      type: string
+      default: 150
+
+resources:
+
+    project:
+      type: OS::Keystone::Project
+      properties:
+        name: { get_param: project_name }
+        domain: { get_param: domain_name }
+        description: { get_param: description_info }
+
+    avi_user_assignment:
+      type: OS::Keystone::UserRoleAssignment
+      properties:
+        user: { get_param: avi_user }
+        roles: [{ "project": { get_resource: project }, "role": { get_param: avi_role }}]
+
+    na_tenant_group_assignment:
+      type: OS::Keystone::GroupRoleAssignment
+      properties:
+        group: { get_param: group_ad_member_id }
+        roles:
+        #- {project: { get_resource: project } , role: { get_param: group_role_member_id }}
+        - role: {get_param: group_role_member_id }
+          project: {get_resource: project}
+
+    nova_user_quota:
+      type: OS::Nova::Quota
+      properties:
+        project: { get_resource: project }
+        cores: { get_param: vcpu_granted }
+        instances:  { get_param: total_number_of_instances }
+        injected_files: { get_param: injected_number_of_files }
+        key_pairs: { get_param: max_key_pairs_allowed }
+        ram: { get_param: total_memory_granted }
+
+    cinder_user_quota:
+      type: OS::Cinder::Quota
+      properties:
+        project: { get_resource: project }
+        volumes:  { get_param: cinder_volume_allowed }
+        gigabytes: { get_param: gigabytes_size }
+
+    neutron_user_quota:
+      type: OS::Neutron::Quota
+      properties:
+        project: { get_resource: project }
+        floatingip:  { get_param: floating_ip_allowed }
+        security_group: { get_param: security_groups }
+
+outputs:
+    output_project_values:
+      value: { get_resource: project }
+      description: Project ID
+    output_avi_values:
+      value: { get_param: avi_user }
+      description: AVI user was added

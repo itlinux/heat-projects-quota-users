@@ -1,25 +1,33 @@
 parameters:
-  project_name: mytest_heat
+ # the new project name 
+  project_name: testing
+ # Avi User (if the name does not work use the ID)
   avi_user: avi
+ # Avi roles normally this is _member_
   avi_role: admin
+ # doamin name
   domain_name: avast.com
-  description_info: New project test heat, quota and adds groups Tenants and OpenStack-Admins 
-  core_number: 10
-  instances_number: 10
-  injected_number: 10
-  #gigabytes is in GB
-  gigabytes_size: 10
-  keys: 10
-  memory: 10
-  volume_allowed: 10
-  floating: 10
-  secgroups: 10
-  # this is the ID of the AD group for Tenants
-  group_name: 3cb828da3b2a3c56ace1e43858cc735eea4f301d9f338c3741e7d4af169eb6d1
-  # this is the id of the group role _member_
-  group_role: 9fe2ff9ee4384b1894a90878d3e92bab
-  # this is the id of the role for admin
-  group_admin_role: 06043ac01f2c4fec9ba8e17d1565a354
-  # this is the ID of the AD group for OpenStack-Admins
-  group_admin_name: 96d3295c0ff35134cdfff2fb09b72722f6a1ac99a84dd6c628016ca80387a3b9
-
+ # Project description 
+  description_info: This project testing for Remo Mattei
+ # Max storage allowed to be consumed
+  gigabytes_size: 1000
+ # volumes allowed to have 
+  cinder_volume_allowed: 100
+ # Public IPs for this project
+  floating_ip_allowed: 10
+ # how many security groups  for this project 
+  security_groups: 100
+ # Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB 
+  total_memory_granted: 70000
+ # number of virtual machines
+  total_number_of_instances: 15
+ # number of ssh keys allowed 
+  max_key_pairs_allowed: 10
+ # Number of files allowed to be injected
+  injected_number_of_files: 1000
+ # Core CPUs allowed for this project
+  vcpu_granted: 100
+ # this is the ID of the AD group for NA-Tenants
+  group_ad_member_id: 3cb828da3b2a3c56ace1e43858cc735eea4f301d9f338c3741e7d4af169eb6d1
+ # this is the id of the group role _member_
+  group_role_member_id: 9fe2ff9ee4384b1894a90878d3e92bab
