@@ -1,4 +1,4 @@
-= This template creates a new project, adds a user, add two groups from AD and sets quota 
+= This template creates a new project, adds a user, add a group from AD and sets quota 
 == HowTo
 
 ** Source the credential for the overcloud  and then run the stack create command  to create a new stack or stack update to update the project
