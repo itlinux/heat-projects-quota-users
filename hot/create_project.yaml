@@ -1,15 +1,24 @@
+---
 heat_template_version: 2016-04-08
-# Created by Remo Mattei 
+
 description: |
   Creates a project and:
    * Manage quotas for cinder, neutron and nova
-   * Assign AD group
+   * Assign AD group NA-Tenant
+   * Assign AD group NA-OpenStack-Admins
    * Assign avi user as an admin
 
 parameters:
   project_name:
     type: string
-    description: New Project
+    description: |
+      The Project Name
+
+  description_info:
+    type: string
+    default: Project was created
+    description: |
+       Describe what the project does and who uses
 
   avi_user:
     type: string
@@ -22,55 +31,96 @@ parameters:
   domain_name:
     type: string
     default: avast.com
-
-  description_info:
-    type: string
-    default: Project was created
+    description: Domain to use AD is on avast.com
 
   group_role_member_id:
     type: string
+    description: group ID for the member role
 
   group_ad_member_id:
     type: string
+    description: group ID for the member role
+
+  group_ad_role_admin_id:
+    type: string
+    description: group ID for the admin role
+    default: e1c04fadc59e60af80f398b705aa5d8df8e04059344d29be03795fe3a64e44f5
+
+  group_role_admin_id:
+    type: string
+    description: group ID for the admin role
+    default: 72a1422c10024a969c4a4666b10ba07f
 
   gigabytes_size:
     type: string
     default: 2000
+    description: Max storage allowed to be consumed
 
   floating_ip_allowed:
     type: string
-    description: Max Floating IPs Allowed
     default: 10
     label: Floating IP
+    description: Max Floating IPs Allowed
 
   cinder_volume_allowed:
     type: string
     default: 200
+    description: Max volumes allowed to have
 
   security_groups:
     type: string
     default: 100
     description: Security Groups Allowed
 
+  security_group_rules:
+    type: string
+    default: 10
+    description: Security Groups Rules Allowed
+
+  neutron_ports:
+    type: string
+    default: 500
+    description: Neutron Ports Allowed
+
+  neutron_networks:
+    type: string
+    default: 100
+    description: Neutron Networks Allowed
+
+  neutron_subnets:
+    type: string
+    default: 20
+    description: Neutron Subnets Allowed
+
+  neutron_routers:
+    type: string
+    default: 10
+    description: Neutron Routers Allowed
+
   total_memory_granted:
     type: string
     default: 151200
+    description: Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB
 
   total_number_of_instances:
     type: string
     default: 150
+    description: Number of virtual machines
 
   max_key_pairs_allowed:
     type: string
     default: 100
+    description: Number of ssh keys allowed
 
   injected_number_of_files:
     type: string
     default: "256"
+    description: Number of files allowed to be injected
 
   vcpu_granted:
     type: string
     default: 150
+    description: Core CPUs allowed for this project
 
 resources:
 
@@ -89,13 +139,20 @@ resources:
         - role: {get_param: group_role_member_id}
           project: {get_resource: project}
 
-
   tenant_group_assignment:
     type: OS::Keystone::GroupRoleAssignment
     properties:
       group: {get_param: group_ad_member_id}
       roles:
         - role: {get_param: group_role_member_id}
+          project: {get_resource: project}
+
+  admin_group_assignment:
+    type: OS::Keystone::GroupRoleAssignment
+    properties:
+      group: {get_param: group_ad_role_admin_id}
+      roles:
+        - role: {get_param: group_role_admin_id}
           project: {get_resource: project}
 
   nova_user_quota:
@@ -121,6 +178,11 @@ resources:
       project: {get_resource: project}
       floatingip: {get_param: floating_ip_allowed}
       security_group: {get_param: security_groups}
+      security_group_rule: {get_param: security_group_rules}
+      network: {get_param: neutron_networks}
+      port: {get_param: neutron_ports}
+      router: {get_param: neutron_routers}
+      subnet: {get_param: neutron_subnets}
 
 outputs:
   output_project_values:
