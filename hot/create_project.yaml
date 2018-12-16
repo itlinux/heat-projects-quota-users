@@ -1,5 +1,6 @@
 ---
 heat_template_version: 2016-04-08
+# Author Remo Mattei
 
 description: |
   Creates a project and:
@@ -100,7 +101,8 @@ parameters:
   total_memory_granted:
     type: string
     default: 151200
-    description: Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB
+    description: |
+      Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB
 
   total_number_of_instances:
     type: string
