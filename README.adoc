@@ -1,4 +1,5 @@
 = This template creates a new project, adds an existing local user from keystone, a group from AD and sets quota for neutron, nova and cinder. 
+
 == HowTo
 
 ** Source the credential for the overcloud  and then run the stack create command  to create a new stack or stack update to update the project
@@ -7,12 +8,12 @@
 
 === Create a new project using the Environment file.
 
-* Create a new project create_project_env.yaml and then use the following:
+* Create a new project project_environments.yaml and then use the following:
 
 * The <project_name> is the name of the stack - The Environment project_name  should match the name of the stack
 
 ----
-openstack stack create -t create_project.yml -e create_project_env.yaml <project_name>
+openstack stack create -t create_project.yaml -e project_environments.yaml <project_name>
 ----
 
 
@@ -22,6 +23,6 @@ openstack stack create -t create_project.yml -e create_project_env.yaml <project
 To update the project run the following:
 
 ----
-openstack stack update  -t  create_project.yml -e create_project_env.yaml  <project_name>
+openstack stack update  -t  create_project.yaml -e project_environments.yaml <project_name>
 ----
 
