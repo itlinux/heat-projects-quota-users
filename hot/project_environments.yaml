@@ -4,54 +4,54 @@
 #
 ---
 parameters:
-# Values for group IDs are for the DEV ENV.
-# the new project nam
+  # Values for group IDs are for the DEV ENV.
+  # the new project nam
   project_name: testing
-# Project description
+  # Project description
   description_info: This project testing for Remo Mattei
-# Avi User (if the name does not work use the ID)
+  # Avi User (if the name does not work use the ID)
   avi_user: avi
-# Avi roles normally this is _member
+  # Avi roles normally this is _member
   avi_role: admin
-# doamin name
+  # doamin name
   domain_name: avast.com
-# this is the ID of the AD group for Tenants
+  # this is the ID of the AD group for Tenants
   group_ad_member_id: ed3643b8fc5972102123df7abd80a7c4007aadda2fb3f691c8e220cc96824a91
-# this is the id of the group role _member_
+  # this is the id of the group role _member_
   group_role_member_id: 9fe2ff9ee4384b1894a90878d3e92bab
-# this is the ID of the AD group for OpenStack-Admins
+  # this is the ID of the AD group for OpenStack-Admins
   group_ad_role_admin_id: e1c04fadc59e60af80f398b705aa5d8df8e04059344d29be03795fe3a64e44f5
-# this is the id of the group role  admin
+  # this is the id of the group role  admin
   group_role_admin_id: 72a1422c10024a969c4a4666b10ba07f
-# Max storage allowed to be consumed
+  # Max storage allowed to be consumed
   gigabytes_size: 1000
-# Max snapshots allowed
+  # Max snapshots allowed
   snapshots_allowed: 10
-# Public IPs for this project
+  # Public IPs for this project
   floating_ip_allowed: 10
-# volumes allowed to have
+  # volumes allowed to have
   cinder_volume_allowed: 100
-# how many security groups for this project
+  # how many security groups for this project
   security_groups: 100
-# how many security groups rules for this project
+  # how many security groups rules for this project
   security_group_rules: 50
-# How many ports allowed
+  # How many ports allowed
   neutron_ports: 500
-# How many networks allowed
+  # How many networks allowed
   neutron_networks: 20
-# How many subnets allowed
+  # How many subnets allowed
   neutron_subnets: 20
-# How many routers allowed
+  # How many routers allowed
   neutron_routers: 10
-# Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB
+  # Ram is in MB 10000 = 10GB max vm is 64GB so setting this to 70GB
   total_memory_granted: 70000
-# Number of metadata items allowed
+  # Number of metadata items allowed
   metadata_items_allowed: 150
-# number of virtual machines
+  # number of virtual machines
   total_number_of_instances: 15
-# number of ssh keys allowed
+  # number of ssh keys allowed
   max_key_pairs_allowed: 10
-# Number of files allowed to be injected
+  # Number of files allowed to be injected
   injected_number_of_files: 1000
-# Core CPUs allowed for this project
+  # Core CPUs allowed for this project
   vcpu_granted: 100

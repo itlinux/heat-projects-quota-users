@@ -1,39 +1,36 @@
 ---
 heat_template_version: 2016-04-08
-# Created by Remo Mattei
-# email: rm@rm.ht
-# http://www.apache.org/licenses/LICENSE-2.0
 
 description: |
   Creates a project and
    * Manage quotas for cinder, neutron and nova
-   * Assign AD group Tenant as member
+   * Assign AD group Tenants as member
    * Assign AD group OpenStack-Admins as admin
    * Assign avi user as an admin or member
 
 parameters:
   project_name:
     type: string
-    description: >
+    description: |
       The Project Name
 
   description_info:
     type: string
     default: Project was created
-    description: >
+    description: |
        Describe what the project does and who uses
 
   avi_user:
     type: string
     description: AVI User for the LBaaS
     constraints:
-      - custom_constraint: keystone.user
+      - custom_constraint: keystone.project
         description: |
            Need to have a project created in order to add the user AVI
 
   avi_role:
     type: string
-    description: >
+    description: |
       Assign the role of the AVI user for this project. It can be either
       _member_ or admin. We found that specific cases need to have AVI set
       as admin like Terraform orchestration. Member allows the project to
@@ -42,39 +39,38 @@ parameters:
   domain_name:
     type: string
     default: avast.com
-    description: >
+    description: |
       Domain to use. AD is now using avast.com. The default domain is Default.
 
   group_role_member_id:
     type: string
-    description: >
+    description: |
       You need the group ID of the member. You need to run the OpenStack role
       list to get the ID.
 
   group_ad_member_id:
     type: string
-    description: >
+    description: |
       You need the group ID of the AD admin. You need to run the OpenStack group
       list --domain avast.com to get the ID.
 
-
   group_ad_role_admin_id:
     type: string
-    description: >
-      You need group ID for the AD admin role.
+    description: |
+      You need group ID for the AD admin role. The default ID is for the DEV
+      environment.
     default: ''
 
   group_role_admin_id:
     type: string
-    description: >
-     Group ID of the local OpenStack admin role.
+    description: |
+     Group ID of the local OpenStack admin role. Default ID is set from the DEV.
     default: ''
 
   gigabytes_size:
     type: number
     default: 2000
-    description: >
-      Sets the max storage size allowed for the entire project.
+    description: Sets the max storage size allowed for the entire project.
     constraints:
       - range: {min: 1000, max: 200000}
         description: Size must be between 1000 and 200000 GB.
@@ -82,8 +78,7 @@ parameters:
   snapshots_allowed:
     type: number
     default: 20
-    description: >
-      Sets the max snapshots allowed for this project
+    description: Sets the max snapshots allowed for this project
     constraints:
       - range: {min: 0, max: 200}
         description: Number of snapshots Allowed. Min 0, Max 200
@@ -92,8 +87,7 @@ parameters:
     type: number
     default: 10
     label: Floating IP
-    description: >
-      Sets the Max Floating IPs Allowed for this project
+    description: Sets the Max Floating IPs Allowed for this project
     constraints:
       - range: {min: 1, max: 50}
         description: Number must be between 1 and 50
@@ -101,8 +95,7 @@ parameters:
   cinder_volume_allowed:
     default: 200
     type: number
-    description: >
-      Defines how many Cinder Volumes are Allowed
+    description: Defines how many Cinder Volumes are Allowed
     constraints:
       - range: {min: -1, max: 500}
         description: Cinder volume number must be between -1 and 500
@@ -110,8 +103,7 @@ parameters:
   security_groups:
     type: number
     default: 100
-    description: >
-      Sets the total number of Security Groups Allowed
+    description: Sets the total number of Security Groups Allowed
     constraints:
       - range: {min: -1, max: 500}
         description: Security groups Number must be between -1 and 500
@@ -119,26 +111,23 @@ parameters:
   security_group_rules:
     type: number
     default: 10
-    description: >
-      Defines how many Security Groups Rules are Allowed
+    description: Defines how many Security Groups Rules are Allowed
     constraints:
-      - range: {min: -1, max: 500}
-        description: Security group rules number must be between -1 and 500
+      - range: {min: -1, max: 2500}
+        description: Security group rules number must be between -1 and 2500
 
   neutron_ports:
     type: number
     default: 300
-    description: >
-      Sets the number of Neutron Ports Allowed
+    description: Sets the number of Neutron Ports Allowed
     constraints:
-      - range: {min: 50, max: 900}
-        description: Neutron ports number must be between 50 and 900
+      - range: {min: 50, max: 2900}
+        description: Neutron ports number must be between 50 and 2900
 
   neutron_networks:
     type: number
     default: 100
-    description: >
-      Sets the number of Neutron Networks Allowed
+    description: Sets the number of Neutron Networks Allowed
     constraints:
       - range: {min: -1, max: 200}
         description: Neutron networks number must be between -1 and 200
@@ -146,8 +135,7 @@ parameters:
   neutron_subnets:
     type: number
     default: 20
-    description: >
-      Sets the number of Neutron Subnets Allowed
+    description: Sets the number of Neutron Subnets Allowed
     constraints:
       - range: {min: -1, max: 200}
         description: Neutron subnets number must be between -1 and 200
@@ -155,8 +143,7 @@ parameters:
   neutron_routers:
     type: number
     default: 10
-    description: >
-      Sets the number of Neutron Routers Allowed
+    description: Sets the number of Neutron Routers Allowed
     constraints:
       - range: {min: -1, max: 100}
         description: Neutron routers number must be between -1 and 100
@@ -164,7 +151,7 @@ parameters:
   total_memory_granted:
     type: number
     default: 151200
-    description: >
+    description: |
       Ram is in MB 10000 = 10GB.  Max vm size is 64GB setting this to 70GB
     constraints:
       - range: {min: 7000, max: 2000000}
@@ -173,8 +160,7 @@ parameters:
   metadata_items_allowed:
     type: number
     default: 128
-    description: >
-      Sets the number of Metadata allowed
+    description: Sets the number of Metadata allowed
     constraints:
       - range: {min: 1, max: 20000}
         description: Number of metadata items. It must be between 1 and 20000
@@ -182,14 +168,12 @@ parameters:
   total_number_of_instances:
     type: string
     default: 150
-    description: >
-      Sets the max Number of Virtual Machines.
+    description: Sets the max Number of Virtual Machines.
 
   max_key_pairs_allowed:
     type: number
     default: 100
-    description: >
-      Defines how many ssh keys can be stored
+    description: Defines how many ssh keys can be stored
     constraints:
       - range: {min: -1, max: 2000}
         description: Number of SSH keys must be between -1 and 2000
@@ -197,14 +181,12 @@ parameters:
   injected_number_of_files:
     type: string
     default: "256"
-    description: >
-      Sets the number of files that can be injected
+    description: Sets the number of files that can be injected
 
   vcpu_granted:
     type: string
     default: 150
-    description: >
-      Sets the max number of Core "CPUs" allowed for this project
+    description: Sets the max number of Core "CPUs" allowed for this project
 
 resources:
 
